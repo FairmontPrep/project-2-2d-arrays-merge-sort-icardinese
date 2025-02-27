@@ -3,6 +3,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+// I USED MERGE SORT!!!! -----
 
 public class GameBoard extends JFrame {
     private static final int SIZE = 8;
@@ -38,9 +39,84 @@ public class GameBoard extends JFrame {
             }
         }
 
-        exampleIcon = new ImageIcon(piecesArray[0][0]); // Load image file
+
+        // initializeBoard();
+
+        mergeSort(piecesArray, 0, piecesArray.length-1);
+
+        System.out.println("After Merge Sort...");
+
+        for (int i = 0; i < piecesArray.length; i++) {
+            for (int j = 0; j < piecesArray[i].length; j++) {
+                System.out.println("piecesArray[" + i + "][" + j + "] = " + piecesArray[i][j]);
+            }
+        }
 
         initializeBoard();
+
+    }
+
+    void mergeSort(String[][] arr, int left, int right) {
+        if (left < right) {
+            int mid = left + (right-left)/2;
+
+            mergeSort(arr, left, mid);
+            mergeSort(arr, mid+1, right);
+
+            merge(arr, left, mid, right);
+        }
+    } 
+
+    void merge(String[][] arr, int left, int mid, int right) {
+        int n1 = mid-left+1;
+        int n2 = right-mid;
+
+        String[][] leftArray = new String[n1][3];
+        String[][] rightArray = new String[n2][3];
+
+        for (int i = 0; i < n1; i++) {
+            leftArray[i][0] = arr[left+i][0];
+            leftArray[i][1] = arr[left+i][1];
+            leftArray[i][2] = arr[left+i][2];
+        }
+        for (int j = 0; j < n2; j++) {
+            rightArray[j][0] = arr[mid+1+j][0];
+            rightArray[j][1] = arr[mid+1+j][1];
+            rightArray[j][2] = arr[mid+1+j][2];
+        }
+
+        int i = 0; int j = 0; int arrIndex = left;
+        while (i < n1 && j < n2) {
+            if (Integer.parseInt(leftArray[i][2]) >= Integer.parseInt(rightArray[j][2])) {
+                arr[arrIndex][0] = rightArray[j][0];
+                arr[arrIndex][1] = rightArray[j][1];
+                arr[arrIndex][2] = rightArray[j][2];
+                j++;
+            }
+            else {
+                arr[arrIndex][0] = leftArray[i][0];
+                arr[arrIndex][1] = leftArray[i][1];
+                arr[arrIndex][2] = leftArray[i][2];
+                i++;
+            }
+            arrIndex++;
+        }
+
+        while (i < n1) {
+            arr[arrIndex][0] = leftArray[i][0];
+            arr[arrIndex][1] = leftArray[i][1];
+            arr[arrIndex][2] = leftArray[i][2];
+            i++;
+            arrIndex++;
+        }
+
+        while (j < n2) {
+            arr[arrIndex][0] = rightArray[j][0];
+            arr[arrIndex][1] = rightArray[j][1];
+            arr[arrIndex][2] = rightArray[j][2];
+            j++;
+            arrIndex++;
+        }
     }
 
     public void loadPieces() {
